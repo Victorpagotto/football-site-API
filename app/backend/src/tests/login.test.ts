@@ -10,10 +10,9 @@ import JWTAuthetificator from '../authentification/JWT/JWT';
 import { IToken } from '../authentification/JWT';
 import { ILoginInfo } from '../validation/user/types';
 import User from '../database/models/usersModel';
-import Example from '../database/models/ExampleModel';
 import loginMock from './Mocks/Login';
 import userList from './Mocks/Login/Users';
-import { IUserInfo } from '../services/types';
+import { IUserInfo } from '../services/login/types';
 const bcrypt = require('bcryptjs');
 
 chai.use(chaiHttp);
@@ -63,17 +62,6 @@ describe('Testa a classe de login.', () => {
           expect(response.status).to.be.equal(400);
           expect(response.body).to.be.deep.equal(loginMock.messages.noPassword);
       });
-      it('Senha não existe.', async (): Promise<void> => {
-        sinon
-          .stub(bcrypt, 'compareSync')
-          .returns(true);
-        const response: Response = await chai
-            .request(app)
-            .post('/login')
-            .send(loginMock.incorrect.noPassword)
-          expect(response.status).to.be.equal(400);
-          expect(response.body).to.be.deep.equal(loginMock.messages.noPassword);
-      });
       it('Senha é inválida.', async (): Promise<void> => {
         sinon
           .stub(bcrypt, 'compareSync')
@@ -82,7 +70,7 @@ describe('Testa a classe de login.', () => {
             .request(app)
             .post('/login')
             .send(loginMock.incorrect.invalidPassword);
-          expect(response.status).to.be.equal(400);
+          expect(response.status).to.be.equal(401);
           expect(response.body).to.be.deep.equal(loginMock.messages.invalidPassword);
       });
       it('Email é inválido.', async (): Promise<void> => {
@@ -93,7 +81,7 @@ describe('Testa a classe de login.', () => {
             .request(app)
             .post('/login')
             .send(loginMock.incorrect.invalidEmail);
-          expect(response.status).to.be.equal(400);
+          expect(response.status).to.be.equal(401);
           expect(response.body).to.be.deep.equal(loginMock.messages.invalidEmail);
       });
       it('Senha está errada.', async (): Promise<void> => {
@@ -104,7 +92,7 @@ describe('Testa a classe de login.', () => {
             .request(app)
             .post('/login')
             .send(loginMock.incorrect.wrongPassword);
-          expect(response.status).to.be.equal(400);
+          expect(response.status).to.be.equal(401);
           expect(response.body).to.be.deep.equal(loginMock.messages.wrongPassword);
       });
       it('Testa o retorno correto de uma requisição.', async (): Promise<void> => {
