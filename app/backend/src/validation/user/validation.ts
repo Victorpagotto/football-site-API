@@ -1,15 +1,16 @@
 import ResponseHandler, { IResponse, IResponseHandler } from '../../utils/responseHandler';
+import { conditionCheck, Validator } from '../types';
 
 import { IConfig, ILoginInfo } from './types';
 
-export default class ValidationLogin {
+export default class ValidationLogin implements Validator {
   private _email: string;
 
   private _password: string;
 
-  private _message: string;
+  public message: string;
 
-  private _status: string;
+  public status: string;
 
   private _passSize: number;
 
@@ -22,8 +23,8 @@ export default class ValidationLogin {
     this._email = loginInfo.email;
     this._password = loginInfo.password;
     this._passSize = passwordSize;
-    this._message = '';
-    this._status = 'OK';
+    this.message = '';
+    this.status = 'OK';
     const standardResponser = ResponseHandler;
     this._handler = responseHandler || standardResponser;
     const standardEmailRegex = /^((\w+)([.-]?\w+)*)@((\w+)([.-]?\w+)*(\.\w+))/i;
@@ -34,67 +35,36 @@ export default class ValidationLogin {
     return this._email;
   }
 
-  protected emailExists = (): void => {
-    if (!this._email) {
-      this._message = '"username" is required';
-      this._status = 'badRequest';
-    }
-  };
-
-  protected passwordExists = (): void => {
-    if (!this._password) {
-      this._message = '"password" is required';
-      this._status = 'badRequest';
-    }
-  };
-
-  protected emailFormat = (): void => {
-    if (!this._emailRegex.test(this._email)) {
-      this._message = '"email" must be a valid email';
-      this._status = 'badRequest';
-    }
-  };
-
-  protected passwordSize = (): void => {
-    if (this._password.length < this._passSize) {
-      this._message = `"password" length must be at least ${this._passSize} characters long`;
-      this._status = 'badRequest';
-    }
-  };
-
-  public validateEmail = (): boolean => {
-    const funcs: (() => void)[] = [
-      this.emailExists,
-      this.emailFormat,
+  // Condition, message, status.
+  protected get checkConditions(): conditionCheck[] {
+    return [
+      [!this._email, '"email" is required', 'badRequest'],
+      [!this._password, '"password" is required', 'badRequest'],
+      [!this._emailRegex.test(this._email), '"email" must be a valid email', 'badRequest'],
+      [
+        this._password.length < this._passSize,
+        `"password" length must be at least ${this._passSize} characters long`,
+        'badRequest',
+      ],
     ];
-    for (let i = 0; i < funcs.length; i += 1) {
-      funcs[i]();
-      if (this._message) return true;
-    }
-    return false;
-  };
+  }
 
-  public validatePassword = (): boolean => {
-    const funcs: (() => void)[] = [
-      this.passwordExists,
-      this.passwordSize,
-    ];
-    for (let i = 0; i < funcs.length; i += 1) {
-      funcs[i]();
-      if (this._message) return true;
+  public checking = (): boolean => {
+    const conditions: conditionCheck[] = [...this.checkConditions];
+    for (let i = 0; i < conditions.length; i += 1) {
+      const [condition, message, status]: conditionCheck = conditions[i];
+      if (condition) {
+        this.message = message;
+        this.status = status;
+        return true;
+      }
     }
     return false;
   };
 
   validate = (): IResponse<boolean> | IResponse<string> => {
-    const funcs: (() => boolean | void)[] = [
-      this.validateEmail,
-      this.validatePassword,
-    ];
-    for (let i = 0; i < funcs.length; i += 1) {
-      if (funcs[i]()) {
-        return this._handler.response<string>(this._status, this._message);
-      }
+    if (this.checking()) {
+      return this._handler.response<string>(this.status, this.message);
     }
     return this._handler.response('OK', true) as IResponse<boolean>;
   };
