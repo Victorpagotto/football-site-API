@@ -18,7 +18,7 @@ export type signJWT = (payload: JwtPayload, secret: Secret, options?: SignOption
 
 export type verifyJWT = (token: string, secret: Secret, options?: VerifyOptions) => verifyResponse;
 
-export interface IJWTAuthetificator {
-  encode: <T>(payload: T) => IToken;
-  decode: <T>(token: string) => T;
+export interface IAuthetificator {
+  encode<T>(payload: T, secretOption?: Secret, paramsConfig?: IAuthConfig): IToken;
+  decode<T>(token: string, secretOption?: Secret):T;
 }

@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import { Secret } from 'jsonwebtoken';
 import {
   IAuthConfig,
-  IJWTAuthetificator,
+  IAuthetificator,
   IJwtPayloadData,
   signJWT,
   IToken,
@@ -13,7 +13,7 @@ config();
 
 export const autoSecret = 'jwt_secret';
 
-export default class JWTAuthetificator implements IJWTAuthetificator {
+export default class JWTAuthetificator implements IAuthetificator {
   private _sign: signJWT;
 
   private _verify: verifyJWT;

@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('matches', {
+    await queryInterface.createTable('matches', {
       id: {
         autoIncrement: true,
         allowNull: false,
@@ -50,6 +50,6 @@ module.exports = {
   },
 
   down: async (queryInterface, _Sequelize) => {
-    return queryInterface.dropTable('matches');
+    await queryInterface.dropTable('matches');
   }
 };

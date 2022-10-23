@@ -1,4 +1,4 @@
-import ResponseHandler, { IResponse, IResponseHandler } from '../../utils/responseHandler';
+import ResponseHandler, { IResponseHandler, IAnswer } from '../../utils/responseHandler';
 import { conditionCheck, Validator } from '../types';
 
 import { IConfig, ILoginInfo } from './types';
@@ -42,19 +42,19 @@ export default class ValidationLogin extends Validator {
   // Condition, message, status.
   protected get checkConditions(): conditionCheck[] {
     return [
-      [!this._email, BADREQUEST, 'badRequest'],
       [!this._password, BADREQUEST, 'badRequest'],
+      [!this._email, BADREQUEST, 'badRequest'],
       [typeof this._email !== 'string', BADREQUEST, 'badRequest'],
       [typeof this._password !== 'string', BADREQUEST, 'badRequest'],
       [!this._emailRegex.test(this._email), UNAUTHORIZED, 'unauthorized'],
-      [this._password.length < this._passSize, UNAUTHORIZED, 'unauthorized'],
+      [!!this._password && this._password.length < this._passSize, UNAUTHORIZED, 'unauthorized'],
     ];
   }
 
-  public validate = (): IResponse<boolean> | IResponse<string> => {
+  public validate = (): IAnswer<boolean> | IAnswer<string> => {
     if (this.checking()) {
-      return this._handler.response<string>(this.status, this.message);
+      return this._handler.answer<string>(this.status, this.message);
     }
-    return this._handler.response<boolean>('OK', true);
+    return this._handler.answer<boolean>('ok', true);
   };
 }

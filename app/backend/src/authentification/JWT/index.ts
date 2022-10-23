@@ -4,7 +4,7 @@ import {
 } from 'jsonwebtoken';
 import {
   IAuthConfig,
-  IJWTAuthetificator,
+  IAuthetificator,
   IJwtPayloadData,
   signJWT,
   IToken,
@@ -12,5 +12,5 @@ import {
 } from './types';
 import JWTAuthetificator from './JWT';
 
-export { IAuthConfig, IJwtPayloadData, signJWT, IToken, verifyJWT, IJWTAuthetificator };
+export { IAuthConfig, IJwtPayloadData, signJWT, IToken, verifyJWT, IAuthetificator };
 export default new JWTAuthetificator(jwtSign, jwtVerify);
