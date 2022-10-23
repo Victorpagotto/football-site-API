@@ -1,23 +1,24 @@
 import { Jwt, JwtPayload, Secret, SignOptions, VerifyOptions } from 'jsonwebtoken';
 
-export interface AuthConfig {
+export interface IAuthConfig {
   [key: string]: string;
 }
 
-export interface Token {
+export interface IToken {
   token: string;
 }
 
-export interface JwtPayloadData<T> extends JwtPayload {
+export interface IJwtPayloadData<T> extends JwtPayload {
   data: T;
 }
 
 export type verifyResponse = Jwt | JwtPayload | string;
+
 export type signJWT = (payload: JwtPayload, secret: Secret, options?: SignOptions) => string;
+
 export type verifyJWT = (token: string, secret: Secret, options?: VerifyOptions) => verifyResponse;
-export interface JWTAuthetificator {
-  sign: signJWT;
-  verify: verifyJWT;
-  encode: <T>(payload: T) => Token;
+
+export interface IJWTAuthetificator {
+  encode: <T>(payload: T) => IToken;
   decode: <T>(token: string) => T;
 }

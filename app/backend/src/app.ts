@@ -8,7 +8,7 @@ class App {
 
     this.config();
 
-    // Não remover essa rota.
+    // Rota para testes.
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
 
@@ -31,5 +31,5 @@ class App {
 
 export { App };
 
-// A execução dos testes de cobertura depende dessa exportação
+// Exportação para testes.
 export const { app } = new App();

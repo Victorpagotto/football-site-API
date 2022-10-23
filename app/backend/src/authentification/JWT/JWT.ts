@@ -1,28 +1,38 @@
 import { config } from 'dotenv';
-import { AuthConfig, JwtPayloadData, signJWT, Token, verifyJWT } from './interfaces';
+import { Secret } from 'jsonwebtoken';
+import {
+  IAuthConfig,
+  IJWTAuthetificator,
+  IJwtPayloadData,
+  signJWT,
+  IToken,
+  verifyJWT,
+} from './types';
 
 config();
 
-export default class JWTAuthetificator implements JWTAuthetificator {
-  sign: signJWT;
+export const autoSecret = 'jwt_secret';
 
-  verify: verifyJWT;
+export default class JWTAuthetificator implements IJWTAuthetificator {
+  private _sign: signJWT;
+
+  private _verify: verifyJWT;
 
   constructor(sign: signJWT, verify: verifyJWT) {
-    this.sign = sign;
-    this.verify = verify;
+    this._sign = sign;
+    this._verify = verify;
   }
 
-  encode<T>(payload: T): Token {
-    const JWTConfig: AuthConfig = { expiresIn: '1d', algorithm: 'HS256' };
-    const secret: string = process.env.SECRET || 'randomword';
-    const token: string = this.sign({ data: payload }, secret, JWTConfig);
+  public encode<T>(payload: T, secretOption?: Secret, paramsConfig?: IAuthConfig): IToken {
+    const JWTConfig: IAuthConfig = paramsConfig || { expiresIn: '1d', algorithm: 'HS256' };
+    const secret: string | Secret = secretOption || autoSecret;
+    const token: string = this._sign({ data: { ...payload } }, secret, JWTConfig);
     return { token };
   }
 
-  decode<T>(token: string):T {
-    const secret: string = process.env.SECRET || 'randomword';
-    const decoded = this.verify(token, secret) as JwtPayloadData<T>;
+  public decode<T>(token: string, secretOption?: Secret):T {
+    const secret: string | Secret = secretOption || autoSecret;
+    const decoded = this._verify(token, secret) as IJwtPayloadData<T>;
     const info: T = decoded.data;
     return info;
   }

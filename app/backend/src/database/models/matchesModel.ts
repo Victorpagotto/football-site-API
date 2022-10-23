@@ -1,4 +1,4 @@
-import { Model, INTEGER } from 'sequelize/types';
+import { Model, INTEGER } from 'sequelize';
 import sequelize from '.';
 
 class Match extends Model {
