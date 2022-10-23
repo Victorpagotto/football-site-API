@@ -12,7 +12,6 @@ import { ILoginInfo } from '../validation/user/types';
 import User from '../database/models/usersModel';
 import loginMock from './Mocks/Login';
 import userList from './Mocks/Login/Users';
-import PassEncrypter from '../authentification/Bpcrypt';
 const bcrypt = require('bcryptjs');
 
 chai.use(chaiHttp);
@@ -42,7 +41,7 @@ describe('Testa a classe de login.', () => {
       });
       it('Email não existe.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
+          .stub(bcrypt, 'compareSync')
           .returns(true);
         const response: Response = await chai
             .request(app)
@@ -53,7 +52,7 @@ describe('Testa a classe de login.', () => {
       });
       it('Senha não existe.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
+          .stub(bcrypt, 'compareSync')
           .returns(true);
         const response: Response = await chai
             .request(app)
@@ -64,7 +63,7 @@ describe('Testa a classe de login.', () => {
       });
       it('Senha é inválida.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
+          .stub(bcrypt, 'compareSync')
           .returns(true);
         const response: Response = await chai
             .request(app)
@@ -75,7 +74,7 @@ describe('Testa a classe de login.', () => {
       });
       it('Email é inválido.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
+          .stub(bcrypt, 'compareSync')
           .returns(true);
         const response: Response = await chai
             .request(app)
@@ -86,7 +85,7 @@ describe('Testa a classe de login.', () => {
       });
       it('Senha está errada.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
+          .stub(bcrypt, 'compareSync')
           .returns(false);
         const response: Response = await chai
             .request(app)
@@ -97,7 +96,7 @@ describe('Testa a classe de login.', () => {
       });
       it('Testa o retorno correto de uma requisição.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
+          .stub(bcrypt, 'compareSync')
           .returns(true);
         const response: Response = await chai
           .request(app)
@@ -110,26 +109,63 @@ describe('Testa a classe de login.', () => {
     describe('Testa a conexão get', () => {
       beforeEach(async () => {
         sinon
-          .stub(JWTAuthetificator, "encode")
-          .resolves({
-            token: loginMock.JWTHash,
-          } as IToken);
-        sinon
-          .stub(JWTAuthetificator, "decode")
-          .resolves(loginMock.correct.user as ILoginInfo);
-        sinon
-          .stub(User, "findOne")
-          .resolves({
-            ...userList.admin.validAdmin,
-        } as any);
+          .stub(bcrypt, 'compareSync')
+          .returns(true);
       });
       afterEach(()=>{
         sinon.restore();
       });
-      it('Testa o retorno da role.', async (): Promise<void> => {
+      it('Token é inválido.', async (): Promise<void> => {
         sinon
-          .stub(PassEncrypter, 'read')
-          .returns(true);
+          .stub(JWTAuthetificator, "encode")
+          .returns({
+          token: 'Pegadinha do malandro.',
+        } as IToken);
+        sinon
+          .stub(User, "findOne")
+          .resolves({
+          ...userList.admin.validAdmin,
+        } as any);
+        const response: Response = await chai
+          .request(app)
+          .get('/login/validate')
+          .auth(loginMock.JWTHash, { type: 'bearer' });
+        expect(response.status).to.be.equal(401);
+        expect(response.body).to.be.deep.equal(loginMock.messages.wrongToken);
+      });
+      it('Usuário não existe ou não é encontrado.', async (): Promise<void> => {
+        sinon
+          .stub(JWTAuthetificator, "encode")
+          .returns({
+          token: 'Pegadinha do malandro.',
+        } as IToken);
+        sinon
+          .stub(JWTAuthetificator, "decode")
+          .returns(loginMock.correct.user as ILoginInfo);
+        sinon
+          .stub(User, "findOne")
+          .resolves(null);
+        const response: Response = await chai
+          .request(app)
+          .get('/login/validate')
+          .auth(loginMock.JWTHash, { type: 'bearer' });
+        expect(response.status).to.be.equal(404);
+        expect(response.body).to.be.deep.equal(loginMock.messages.userNotFound);
+      });
+      it('A role é retornada corretamente', async (): Promise<void> => {
+        sinon
+          .stub(JWTAuthetificator, "encode")
+          .returns({
+          token: 'Pegadinha do malandro.',
+        } as IToken);
+        sinon
+          .stub(JWTAuthetificator, "decode")
+          .returns(loginMock.correct.user as ILoginInfo);
+        sinon
+          .stub(User, "findOne")
+          .resolves({
+          ...userList.admin.validAdmin,
+        } as any);
         const response: Response = await chai
           .request(app)
           .get('/login/validate')

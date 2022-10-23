@@ -33,6 +33,9 @@ const loginMock = {
     wrongPassword: {
       email: 'email@email.com',
       password: 'bipibopibupi',
+    },
+    userNotFound: {
+      
     }
   },
   messages: {
@@ -41,6 +44,8 @@ const loginMock = {
     invalidPassword: { message: 'Incorrect email or password' },
     invalidEmail: { message: 'Incorrect email or password' },
     wrongPassword: { message: 'Incorrect email or password' },
+    wrongToken: { message: 'Invalid token.' },
+    userNotFound: { message: 'User not found.' },
   },
 }
 export default loginMock;

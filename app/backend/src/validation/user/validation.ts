@@ -35,10 +35,6 @@ export default class ValidationLogin extends Validator {
     this._emailRegex = config.emailRegex || standardEmailRegex;
   }
 
-  public get email(): string {
-    return this._email;
-  }
-
   // Condition, message, status.
   protected get checkConditions(): conditionCheck[] {
     return [

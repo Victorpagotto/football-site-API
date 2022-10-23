@@ -31,6 +31,9 @@ class UsersController implements IUsersController {
   public getRole = async (_req: Request, res: Response): Promise<Response> => {
     const userInfo: IUserInfo = res.locals as IUserInfo;
     const { status, result } = await this.service.getById(userInfo.id);
+    if (status !== 200) {
+      return res.status(status).json(result);
+    }
     const info = result as IUserSession;
     const role = { role: info.role };
     return res.status(status).json(role);

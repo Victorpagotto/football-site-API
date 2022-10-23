@@ -40,7 +40,7 @@ class UserService implements ILoginService {
   public async getById(id: number): Promise<IResponse<IUserSession> | IResponse<string>> {
     const user: IUserInfo | null = await this.model.findOne({ where: { id } });
     if (!user) {
-      return this.handler.response<string>('notFound', 'User no found.');
+      return this.handler.response<string>('notFound', 'User not found.');
     }
     const session: IUserSession = {
       email: user.email,
