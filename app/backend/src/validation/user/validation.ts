@@ -19,15 +19,15 @@ export default class ValidationLogin implements Validator {
   private _emailRegex: RegExp;
 
   constructor(loginInfo: ILoginInfo, config: IConfig) {
-    const { responseHandler, passwordSize } = config;
+    const { passwordSize } = config;
+    const standardResponser = ResponseHandler;
+    const standardEmailRegex = /^((\w+)([.-]?\w+)*)@((\w+)([.-]?\w+)*(\.\w+))/i;
     this._email = loginInfo.email;
     this._password = loginInfo.password;
     this._passSize = passwordSize;
-    this.message = '';
-    this.status = 'OK';
-    const standardResponser = ResponseHandler;
-    this._handler = responseHandler || standardResponser;
-    const standardEmailRegex = /^((\w+)([.-]?\w+)*)@((\w+)([.-]?\w+)*(\.\w+))/i;
+    this.message = 'Not validated';
+    this.status = 'Not validated';
+    this._handler = config.responseHandler || standardResponser;
     this._emailRegex = config.emailRegex || standardEmailRegex;
   }
 
