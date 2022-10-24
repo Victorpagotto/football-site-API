@@ -15,9 +15,11 @@ class UsersController implements IUsersController {
   constructor(service: ILoginService, auth: IAuthetificator) {
     this.service = service;
     this.auth = auth;
+    this.login = this.login.bind(this);
+    this.getRole = this.getRole.bind(this);
   }
 
-  public login = async (req: Request, res: Response): Promise<Response> => {
+  public async login(req: Request, res: Response): Promise<Response> {
     const loginInfo: ILoginInfo = req.body;
     const { status, result } = await this.service.login(loginInfo);
     const secret = process.env.JWT_SECRET;
@@ -26,9 +28,9 @@ class UsersController implements IUsersController {
         .json(this.auth.encode<IUserSession>(result as IUserSession, secret));
     }
     return res.status(status).json(result);
-  };
+  }
 
-  public getRole = async (_req: Request, res: Response): Promise<Response> => {
+  public async getRole(_req: Request, res: Response): Promise<Response> {
     const userInfo: IUserInfo = res.locals as IUserInfo;
     const { status, result } = await this.service.getById(userInfo.id);
     if (status !== 200) {
@@ -37,7 +39,7 @@ class UsersController implements IUsersController {
     const info = result as IUserSession;
     const role = { role: info.role };
     return res.status(status).json(role);
-  };
+  }
 }
 
 export default UsersController;

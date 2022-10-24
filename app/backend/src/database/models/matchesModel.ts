@@ -43,7 +43,7 @@ Match.init({
   tableName: 'matches',
   underscored: true,
   timestamps: false,
-  modelName: 'matches',
+  modelName: 'Matches',
 });
 
 Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'home_teams' });

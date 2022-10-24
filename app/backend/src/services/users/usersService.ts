@@ -6,7 +6,7 @@ import { IResponse, IResponseHandler } from '../../utils/responseHandler';
 
 import PassEncrypter from '../../authentification/Bpcrypt';
 
-class UserService implements ILoginService {
+class UsersService implements ILoginService {
   private model: typeof User;
   private handler: IResponseHandler;
 
@@ -52,4 +52,4 @@ class UserService implements ILoginService {
   }
 }
 
-export default UserService;
+export default UsersService;
