@@ -5,13 +5,15 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 
-import { Response } from 'superagent';
-import JWTAuthetificator from '../authentification/JWT';
-import teamsMock from './Mocks/Teams';
-import { ILoginInfo } from '../validation/user/types';
 import Team from '../database/models/teamsModel';
-import loginMock from './Mocks/Login';
+import teamsMock from './Mocks/Teams';
 import teamList from './Mocks/Teams/teams';
+
+import { Response } from 'superagent';
+import { ILoginInfo } from '../validation/user/types';
+
+import JWTAuthetificator from '../authentification/JWT';
+import loginMock from './Mocks/Login';
 
 chai.use(chaiHttp);
 
