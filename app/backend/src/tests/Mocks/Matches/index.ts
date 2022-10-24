@@ -168,6 +168,50 @@ const matchesMock = {
       }
     },
   },
-}
+  update: {
+    insert: {
+      finishCorrect: {
+
+      },
+      finishNotFound: {
+
+      },
+      correct: {
+        "homeTeamGoals": 3,
+        "awayTeamGoals": 1,
+      },
+      notFound: {
+        "homeTeamGoals": 3,
+        "awayTeamGoals": 1,
+      },
+      noHomeGoals: {
+        "awayTeamGoals": 1,
+      },
+      noAwayGoals: {
+        "homeTeamGoals": 3,
+      },
+    },
+    return: {
+      finishCorrect: {
+        "message": 'Finished',
+      },
+      finishNotFound: {
+        "message": 'Team not found.',
+      },
+      correct: {
+        "message": 'Team updated.',
+      },
+      notFound: {
+        "message": 'Team not found.',
+      },
+      noHomeGoals: {
+        "message": 'All fields must be filled',
+      },
+      noAwayGoals: {
+        "message": 'All fields must be filled',
+      },
+    },
+  },
+};
 
 export default matchesMock;

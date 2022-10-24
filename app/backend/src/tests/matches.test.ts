@@ -15,6 +15,7 @@ import { ILoginInfo } from '../validation/user/types';
 import JWTAuthetificator from '../authentification/JWT';
 import loginMock from './Mocks/Login';
 import teams from './Mocks/Teams/teams';
+import usersList from './Mocks/Login/Users'
 
 chai.use(chaiHttp);
 
@@ -155,10 +156,31 @@ describe('Testa a rota de matches.',() => {
       sinon
         .stub(Match, 'create')
         .resolves({} as any);
+      sinon
+        .stub(Match, 'findAll')
+        .resolves([...teams] as any);
       const response: Response = await chai
           .request(app)
           .post('/matches')
           .auth(matchesMock.create.insert.invalidToken.token, { type: 'bearer' })
+          .send({ ...matchesMock.create.insert.correct });
+      expect(response.status).to.be.equal(401);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.create.return.invalidToken });
+    });
+    it('Testa se não é possível criar partidas se não for um admin.', async (): Promise<void> => {
+      sinon.restore();
+      sinon
+        .stub(Match, 'create')
+        .resolves({} as any);
+      sinon
+        .stub(JWTAuthetificator, "decode")
+        .returns({ ...usersList.user.validUser } as ILoginInfo);
+      sinon
+        .stub(Match, 'findAll')
+        .resolves([...teams] as any);
+      const response: Response = await chai
+          .request(app)
+          .post('/matches')
           .send({ ...matchesMock.create.insert.correct });
       expect(response.status).to.be.equal(401);
       expect(response.body).to.be.deep.equal({ ...matchesMock.create.return.invalidToken });
@@ -170,22 +192,75 @@ describe('Testa a rota de matches.',() => {
         .stub(JWTAuthetificator, "decode")
         .returns(loginMock.correct.user as ILoginInfo);
       sinon
-        .stub(Match, 'findOne')
-        .resolves( [0, [matchesList[0]]] as any);
-      sinon
         .stub(Match, 'update')
-        .resolves( matchesList[0] as any);
+        .resolves( [0, [matchesList[0]]] as any);
     });
     afterEach(()=>{
       sinon.restore();
     });
     it('Testa se é possível finalizar uma partida com sucesso.', async () => {
+      sinon
+        .stub(Match, 'findOne')
+        .resolves( matchesList[0] as any);
       const response: Response = await chai
           .request(app)
-          .post('/matches')
-          .send({ ...matchesMock.create.insert.correct });
-      expect(response.status).to.be.equal(401);
-      expect(response.body).to.be.deep.equal({ ...matchesMock.create.return.invalidToken });
+          .put('/matches/1/finish')
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.finishCorrect });
+    });
+    it('Testa se é possível alterar uma partida com sucesso.', async () => {
+      sinon
+        .stub(Match, 'findOne')
+        .resolves( matchesList[0] as any);
+      const response: Response = await chai
+          .request(app)
+          .put('/matches/1')
+          .send({ ...matchesMock.update.insert.correct });
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.correct });
+    });
+    it('Testa se não é possível finalizar uma partida inexistente.', async () => {
+      sinon
+        .stub(Match, 'findOne')
+        .resolves(null);
+      const response: Response = await chai
+          .request(app)
+          .put('/matches/1/finish')
+      expect(response.status).to.be.equal(404);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.finishNotFound});
+    });
+    it('Testa se não é possível alterar uma partida inexistente.', async () => {
+      sinon
+        .stub(Match, 'findOne')
+        .resolves(null);
+      const response: Response = await chai
+          .request(app)
+          .put('/matches/1')
+          .send({ ...matchesMock.update.insert.correct });
+      expect(response.status).to.be.equal(404);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.notFound });
+    });
+    it('Testa se não é possível alterar uma partida sem goals do time de casa.', async () => {
+      sinon
+        .stub(Match, 'findOne')
+        .resolves({} as any);
+      const response: Response = await chai
+          .request(app)
+          .put('/matches/1')
+          .send({ ...matchesMock.update.insert.noHomeGoals });
+      expect(response.status).to.be.equal(400);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.noHomeGoals });
+    });
+    it('Testa se não é possível alterar uma partida sem goals do time de fora.', async () => {
+      sinon
+        .stub(Match, 'findOne')
+        .resolves({} as any);
+      const response: Response = await chai
+          .request(app)
+          .put('/matches/1')
+          .send({ ...matchesMock.update.insert.noAwayGoals });
+      expect(response.status).to.be.equal(400);
+      expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.noAwayGoals });
     });
   });
 });
