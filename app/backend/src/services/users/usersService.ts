@@ -7,12 +7,12 @@ import { IResponse, IResponseHandler } from '../../utils/responseHandler';
 import PassEncrypter from '../../authentification/Bpcrypt';
 
 class UsersService implements ILoginService {
-  private model: typeof User;
-  private handler: IResponseHandler;
+  private _model: typeof User;
+  private _handler: IResponseHandler;
 
   constructor(model: typeof User, responseHandler: IResponseHandler) {
-    this.model = model;
-    this.handler = responseHandler;
+    this._model = model;
+    this._handler = responseHandler;
     this.login = this.login.bind(this);
     this.getById = this.getById.bind(this);
   }
@@ -21,12 +21,12 @@ class UsersService implements ILoginService {
     const validator = new ValidationLogin(loginInfo, { passwordSize: 7 });
     const { status, result } = validator.validate();
     if (status !== 'ok') {
-      return this.handler.response<string>(status, result as string);
+      return this._handler.response<string>(status, result as string);
     }
     const { email, password } = loginInfo;
-    const user: IUserInfo | null = await this.model.findOne({ where: { email } });
+    const user: IUserInfo | null = await this._model.findOne({ where: { email } });
     if (!(user && PassEncrypter.read(user.password, password))) {
-      return this.handler.response<string>('unauthorized', 'Incorrect email or password');
+      return this._handler.response<string>('unauthorized', 'Incorrect email or password');
     }
     const session: IUserSession = {
       email: user.email,
@@ -34,13 +34,13 @@ class UsersService implements ILoginService {
       username: user.username,
       id: user.id,
     };
-    return this.handler.response<IUserSession>('ok', session);
+    return this._handler.response<IUserSession>('ok', session);
   }
 
   public async getById(id: number): Promise<IResponse<IUserSession> | IResponse<string>> {
-    const user: IUserInfo | null = await this.model.findOne({ where: { id } });
+    const user: IUserInfo | null = await this._model.findOne({ where: { id } });
     if (!user) {
-      return this.handler.response<string>('notFound', 'User not found.');
+      return this._handler.response<string>('notFound', 'User not found.');
     }
     const session: IUserSession = {
       email: user.email,
@@ -48,7 +48,7 @@ class UsersService implements ILoginService {
       username: user.username,
       id: user.id,
     };
-    return this.handler.response<IUserSession>('ok', session);
+    return this._handler.response<IUserSession>('ok', session);
   }
 }
 

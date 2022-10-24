@@ -42,8 +42,8 @@ module.exports = {
         field: 'away_team_goals',
       },
       inProgress: {
-        type: Sequelize.INTEGER,
         allowNull: false,
+        type: Sequelize.BOOLEAN,
         field: 'in_progress',
       },
     });

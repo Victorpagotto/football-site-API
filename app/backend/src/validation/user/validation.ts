@@ -7,13 +7,13 @@ const UNAUTHORIZED = 'Incorrect email or password';
 const BADREQUEST = 'All fields must be filled';
 
 export default class ValidationLogin extends Validator {
-  private _email: string;
-
-  private _password: string;
-
   public message: string;
 
   public status: string;
+
+  private _email: string;
+
+  private _password: string;
 
   private _passSize: number;
 
@@ -24,7 +24,7 @@ export default class ValidationLogin extends Validator {
   constructor(loginInfo: ILoginInfo, config: IConfig) {
     super();
     const { passwordSize } = config;
-    const standardResponser = ResponseHandler;
+    const standardResponser = config.responseHandler || ResponseHandler;
     const standardEmailRegex = /^((\w+)([.-]?\w+)*)@((\w+)([.-]?\w+)*(\.\w+))/i;
     this._email = loginInfo.email;
     this._password = loginInfo.password;

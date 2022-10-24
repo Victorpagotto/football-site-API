@@ -1,4 +1,4 @@
-import { Model, INTEGER } from 'sequelize';
+import { Model, INTEGER, BOOLEAN } from 'sequelize';
 import db from '.';
 import Team from './teamsModel';
 
@@ -36,17 +36,17 @@ Match.init({
   },
   inProgress: {
     allowNull: false,
-    type: INTEGER,
+    type: BOOLEAN,
   },
 }, {
   sequelize: db,
   tableName: 'matches',
   underscored: true,
   timestamps: false,
-  modelName: 'Matches',
+  modelName: 'Match',
 });
 
-Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'home_teams' });
-Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'away_teams' });
+Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
+Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
 
 export default Match;
