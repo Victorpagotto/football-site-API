@@ -5,8 +5,8 @@ import authenticator from '../middleweres/JWT';
 const matchesRouter = express.Router();
 matchesRouter.use(express.json());
 
-matchesRouter.put('/:id/finish', authenticator.auth, matchesController.finish);
-matchesRouter.put('/:id', authenticator.auth, matchesController.update);
+matchesRouter.patch('/:id/finish', matchesController.finish);
+matchesRouter.patch('/:id', matchesController.update);
 matchesRouter.get('/', matchesController.getAll);
 matchesRouter.post('/', authenticator.auth, matchesController.create);
 
