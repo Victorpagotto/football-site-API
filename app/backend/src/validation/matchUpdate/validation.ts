@@ -5,7 +5,7 @@ import { IConfig, IMatchInsert } from './types';
 
 const BADREQUEST = 'All fields must be filled';
 
-export default class ValidationUpdate extends Validator {
+export default class ValidationUpdateMatch extends Validator {
   public message: string;
 
   public status: string;

@@ -13,6 +13,7 @@ import { ILoginInfo } from '../validation/user/types';
 import { IToken } from '../authentification/JWT';
 
 import JWTAuthetificator from '../authentification/JWT';
+import { IUserSession } from '../services/users/types';
 
 
 const bcrypt = require('bcryptjs');
@@ -31,7 +32,7 @@ describe('Testa a rota de login..',() => {
         } as IToken);
       sinon
         .stub(JWTAuthetificator, "decode")
-        .returns(loginMock.correct.user as ILoginInfo);
+        .returns(loginMock.correct.userSession as IUserSession);
       sinon
         .stub(User, 'findOne')
         .resolves({
@@ -139,11 +140,11 @@ describe('Testa a rota de login..',() => {
       sinon
         .stub(JWTAuthetificator, "encode")
         .returns({
-        token: 'Pegadinha do malandro.',
+        token: 'A token',
       } as IToken);
       sinon
         .stub(JWTAuthetificator, "decode")
-        .returns(loginMock.correct.user as ILoginInfo);
+        .returns(loginMock.correct.userSession as IUserSession);
       sinon
         .stub(User, "findOne")
         .resolves(null);
@@ -158,11 +159,11 @@ describe('Testa a rota de login..',() => {
       sinon
         .stub(JWTAuthetificator, "encode")
         .returns({
-        token: 'Pegadinha do malandro.',
+        token: 'A token',
       } as IToken);
       sinon
         .stub(JWTAuthetificator, "decode")
-        .returns(loginMock.correct.user as ILoginInfo);
+        .returns(loginMock.correct.userSession as IUserSession);
       sinon
         .stub(User, "findOne")
         .resolves({

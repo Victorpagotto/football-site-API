@@ -1,6 +1,6 @@
 import { IConfig, IMatchInfo } from './types';
-import ValidationCreate from './validation';
+import ValidationMatchCreate from './validation';
 
 export { IConfig, IMatchInfo };
 
-export default ValidationCreate;
+export default ValidationMatchCreate;

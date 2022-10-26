@@ -5,7 +5,7 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 
-import Match from '../database/models/teamsModel';
+import Match from '../database/models/matchesModel';
 import matchesMock from './Mocks/Matches';
 import matchesList from './Mocks/Matches/matches';
 
@@ -16,6 +16,8 @@ import JWTAuthetificator from '../authentification/JWT';
 import loginMock from './Mocks/Login';
 import teams from './Mocks/Teams/teams';
 import usersList from './Mocks/Login/Users'
+import Team from '../database/models/teamsModel';
+import { IUserSession } from '../services/users/types';
 
 chai.use(chaiHttp);
 
@@ -26,7 +28,10 @@ describe('Testa a rota de matches.',() => {
     beforeEach(() => {
       sinon
         .stub(JWTAuthetificator, "decode")
-        .returns(loginMock.correct.user as ILoginInfo);
+        .returns(loginMock.correct.userSession as IUserSession);
+      sinon
+        .stub(Team, 'findAll')
+        .resolves([...teams] as any);
     });
     afterEach(()=>{
       sinon.restore();
@@ -66,9 +71,9 @@ describe('Testa a rota de matches.',() => {
     beforeEach(() => {
       sinon
         .stub(JWTAuthetificator, "decode")
-        .returns(loginMock.correct.user as ILoginInfo);
+        .returns(loginMock.correct.userSession as IUserSession);
       sinon
-        .stub(Match, 'findAll')
+        .stub(Team, 'findAll')
         .resolves([...teams] as any);
     });
     afterEach(()=>{
@@ -77,13 +82,13 @@ describe('Testa a rota de matches.',() => {
     it('Testa a criação de uma partida com sucesso.', async (): Promise<void> => {
       sinon
         .stub(Match, 'create')
-        .resolves({ ...matchesMock.create.return.correct } as any);
+        .resolves({ ...matchesMock.create.return.correct.dataValues } as any);
       const response: Response = await chai
           .request(app)
           .post('/matches')
           .send({ ...matchesMock.create.insert.correct });
       expect(response.status).to.be.equal(201);
-      expect(response.body).to.be.deep.equal({ ...matchesMock.create.return.correct });
+      expect(response.body).to.be.deep.equal({ ...matchesMock.create.return.correct.dataValues });
     });
     it('Testa se nãa é possível criar partidas sem o time da casa.', async () => {
       sinon
@@ -190,7 +195,7 @@ describe('Testa a rota de matches.',() => {
     beforeEach(() => {
       sinon
         .stub(JWTAuthetificator, "decode")
-        .returns(loginMock.correct.user as ILoginInfo);
+        .returns(loginMock.correct.userSession as IUserSession);
       sinon
         .stub(Match, 'update')
         .resolves( [0, [matchesList[0]]] as any);

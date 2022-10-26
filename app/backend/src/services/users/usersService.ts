@@ -2,7 +2,7 @@ import ValidationLogin from '../../validation/user/validation';
 import User from '../../database/models/usersModel';
 import { ILoginService, IUserInfo, IUserSession } from './types';
 import { ILoginInfo } from '../../validation/user/types';
-import { IResponse, IResponseHandler } from '../../utils/responseHandler';
+import { IAnswer, IResponse, IResponseHandler } from '../../utils/responseHandler';
 
 import PassEncrypter from '../../authentification/Bpcrypt';
 
@@ -19,7 +19,7 @@ class UsersService implements ILoginService {
 
   public async login(loginInfo: ILoginInfo): Promise<IResponse<IUserSession> | IResponse<string>> {
     const validator = new ValidationLogin(loginInfo, { passwordSize: 7 });
-    const { status, result } = validator.validate();
+    const { status, result }: IAnswer<boolean> | IAnswer<string> = validator.validate();
     if (status !== 'ok') {
       return this._handler.response<string>(status, result as string);
     }

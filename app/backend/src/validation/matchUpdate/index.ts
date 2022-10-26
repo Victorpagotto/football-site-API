@@ -1,5 +1,5 @@
 import { IConfig, IMatchInsert } from './types';
-import ValidationUpdate from './validation';
+import ValidationUpdateMatch from './validation';
 
 export { IConfig, IMatchInsert };
-export default ValidationUpdate;
+export default ValidationUpdateMatch;

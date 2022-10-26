@@ -196,13 +196,13 @@ const matchesMock = {
         "message": 'Finished',
       },
       finishNotFound: {
-        "message": 'Team not found.',
+        "message": 'Match not found.',
       },
       correct: {
-        "message": 'Team updated.',
+        "message": 'Match updated.',
       },
       notFound: {
-        "message": 'Team not found.',
+        "message": 'Match not found.',
       },
       noHomeGoals: {
         "message": 'All fields must be filled',

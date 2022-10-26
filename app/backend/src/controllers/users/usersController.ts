@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { IUserSession } from '../../services/users/types';
 import { IAuthetificator } from '../../authentification/JWT';
 
-import { ILoginInfo, ILoginService, IUserInfo } from '../../services/users';
+import { ILoginInfo, ILoginService } from '../../services/users';
 import { IUsersController } from './types';
 
 config();
@@ -31,7 +31,7 @@ class UsersController implements IUsersController {
   }
 
   public async getRole(_req: Request, res: Response): Promise<Response> {
-    const userInfo: IUserInfo = res.locals as IUserInfo;
+    const userInfo: IUserSession = res.locals as IUserSession;
     const { status, result } = await this.service.getById(userInfo.id);
     if (status !== 200) {
       return res.status(status).json(result);

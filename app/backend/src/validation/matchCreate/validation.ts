@@ -6,7 +6,7 @@ import { IConfig, IMatchInfo } from './types';
 
 const BADREQUEST = 'All fields must be filled';
 
-export default class ValidationCreate extends Validator {
+export default class ValidationMatchCreate extends Validator {
   public message: string;
 
   public status: string;
@@ -33,7 +33,7 @@ export default class ValidationCreate extends Validator {
     this._awayTeam = matchInfo.awayTeam;
     this._homeTeamGoals = matchInfo.homeTeamGoals;
     this._awayTeamGoals = matchInfo.awayTeamGoals;
-    this._teamsId = ValidationCreate.genIdList(teamList);
+    this._teamsId = ValidationMatchCreate.genIdList(teamList);
   }
 
   private static genIdList(teamList: ITeam[]): number[] {
@@ -47,11 +47,11 @@ export default class ValidationCreate extends Validator {
       [!this._awayTeam, BADREQUEST, 'badRequest'],
       [!this._homeTeamGoals, BADREQUEST, 'badRequest'],
       [!this._awayTeamGoals, BADREQUEST, 'badRequest'],
+      [!this._teamsId.includes(this._homeTeam), 'There is no team with such id!', 'notFound'],
+      [!this._teamsId.includes(this._awayTeam), 'There is no team with such id!', 'notFound'],
       [this._homeTeam === this._awayTeam,
         'It is not possible to create a match with two equal teams',
         'unprocessable'],
-      [!this._teamsId.includes(this._homeTeam), 'There is no team with such id!', 'notFound'],
-      [!this._teamsId.includes(this._awayTeam), 'There is no team with such id!', 'notFound'],
     ];
   }
 
