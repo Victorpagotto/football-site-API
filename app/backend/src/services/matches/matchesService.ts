@@ -48,7 +48,6 @@ class MatchesService implements IMatchesService {
     matchInfo: IMatchInfo,
     user: IUserSession,
   ): Promise<IResponse<IMatchRaw> | IResponse<string>> {
-    console.error(JSON.stringify(user));
     if (user.role !== 'admin') {
       return this.handler.response('unauthorized', 'Token must be a valid token');
     }

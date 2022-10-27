@@ -209,7 +209,7 @@ describe('Testa a rota de matches.',() => {
         .resolves( matchesList[0] as any);
       const response: Response = await chai
           .request(app)
-          .put('/matches/1/finish')
+          .patch('/matches/1/finish')
       expect(response.status).to.be.equal(200);
       expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.finishCorrect });
     });
@@ -219,7 +219,7 @@ describe('Testa a rota de matches.',() => {
         .resolves( matchesList[0] as any);
       const response: Response = await chai
           .request(app)
-          .put('/matches/1')
+          .patch('/matches/1')
           .send({ ...matchesMock.update.insert.correct });
       expect(response.status).to.be.equal(200);
       expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.correct });
@@ -230,7 +230,7 @@ describe('Testa a rota de matches.',() => {
         .resolves(null);
       const response: Response = await chai
           .request(app)
-          .put('/matches/1/finish')
+          .patch('/matches/1/finish')
       expect(response.status).to.be.equal(404);
       expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.finishNotFound});
     });
@@ -240,7 +240,7 @@ describe('Testa a rota de matches.',() => {
         .resolves(null);
       const response: Response = await chai
           .request(app)
-          .put('/matches/1')
+          .patch('/matches/1')
           .send({ ...matchesMock.update.insert.correct });
       expect(response.status).to.be.equal(404);
       expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.notFound });
@@ -251,7 +251,7 @@ describe('Testa a rota de matches.',() => {
         .resolves({} as any);
       const response: Response = await chai
           .request(app)
-          .put('/matches/1')
+          .patch('/matches/1')
           .send({ ...matchesMock.update.insert.noHomeGoals });
       expect(response.status).to.be.equal(400);
       expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.noHomeGoals });
@@ -262,7 +262,7 @@ describe('Testa a rota de matches.',() => {
         .resolves({} as any);
       const response: Response = await chai
           .request(app)
-          .put('/matches/1')
+          .patch('/matches/1')
           .send({ ...matchesMock.update.insert.noAwayGoals });
       expect(response.status).to.be.equal(400);
       expect(response.body).to.be.deep.equal({ ...matchesMock.update.return.noAwayGoals });
