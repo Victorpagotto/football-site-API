@@ -102,13 +102,26 @@ class LeaderboardService {
   }
 
   private static _createStatsArray(stats: IObjectStats): ITeamStat[] {
-    return Object.values(stats).map<ITeamStat>((team: ITeamStat): ITeamStat => team);
+    return Object.values(stats).map<ITeamStat>((team: ITeamStat): ITeamStat => team)
+      .sort((a: ITeamStat, b: ITeamStat): number => {
+        const points = b.totalPoints - a.totalPoints;
+        if (points !== 0) return points;
+        const victories = b.totalVictories - a.totalVictories;
+        if (victories !== 0) return victories;
+        const goals = b.goalsBalance - a.goalsBalance;
+        if (goals !== 0) return goals;
+        const goalsFavor = b.goalsFavor - a.goalsFavor;
+        if (goalsFavor !== 0) return goalsFavor;
+        const goalsOwn = a.goalsOwn - b.goalsOwn;
+        return goalsOwn;
+      });
   }
 
   public async leaderboard(
     keys: dictInput[],
   ): Promise<IResponse<ITeamStat[]> | IResponse<string>> {
-    const matchesList: IMatchRaw[] = await this._matchesModel.findAll();
+    const matchesList: IMatchRaw[] = await this._matchesModel
+      .findAll({ where: { inProgress: false } });
     const matchIndex: IMatchIndex[] = matchesList as IMatchIndex[];
     const teamIndex: ITeamIndex = await this._getTeamIndex();
     let statsBlock: IObjectStats = {};
