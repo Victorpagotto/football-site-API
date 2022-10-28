@@ -10,7 +10,7 @@ export const newTeam: ITeamStat = {
   goalsFavor: 0,
   goalsOwn: 0,
   goalsBalance: 0,
-  efficiency: '100%',
+  efficiency: 0,
 };
 
 export const dictionary: ITeamDictionnary = {

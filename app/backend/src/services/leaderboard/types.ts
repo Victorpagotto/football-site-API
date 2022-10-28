@@ -16,7 +16,7 @@ export interface ITeamStat {
   goalsFavor: number;
   goalsOwn: number;
   goalsBalance: number;
-  efficiency: string;
+  efficiency: number;
 }
 
 export interface homeDict {

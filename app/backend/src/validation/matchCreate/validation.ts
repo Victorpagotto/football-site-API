@@ -45,8 +45,8 @@ export default class ValidationMatchCreate extends Validator {
     return [
       [!this._homeTeam, BADREQUEST, 'badRequest'],
       [!this._awayTeam, BADREQUEST, 'badRequest'],
-      [!this._homeTeamGoals, BADREQUEST, 'badRequest'],
-      [!this._awayTeamGoals, BADREQUEST, 'badRequest'],
+      [!this._homeTeamGoals && this._homeTeamGoals !== 0, BADREQUEST, 'badRequest'],
+      [!this._awayTeamGoals && this._awayTeamGoals !== 0, BADREQUEST, 'badRequest'],
       [!this._teamsId.includes(this._homeTeam), 'There is no team with such id!', 'notFound'],
       [!this._teamsId.includes(this._awayTeam), 'There is no team with such id!', 'notFound'],
       [this._homeTeam === this._awayTeam,

@@ -60,9 +60,9 @@ class LeaderboardService {
     }
   }
 
-  private static _calculateEfficiency(pointsTotal: number, gamesTotal: number): string {
+  private static _calculateEfficiency(pointsTotal: number, gamesTotal: number): number {
     const efficiency = (pointsTotal / (gamesTotal * 3)) * 100;
-    return efficiency.toFixed(2);
+    return Number(efficiency.toFixed(2));
   }
 
   private _calculateStatistics(key: dictInput, match: IMatchIndex, teamStat: ITeamStat): ITeamStat {
@@ -70,13 +70,13 @@ class LeaderboardService {
     const dict: dictOutput = this._dict(key);
     const resultIndex: matchResult = LeaderboardService._readResult(match, dict);
     teamStatCopy.totalGames += 1;
-    teamStatCopy.goalsOwn += match[dict.against];
-    teamStatCopy.goalsFavor += match[dict.goals];
-    teamStatCopy.goalsBalance = teamStat.goalsFavor - teamStat.goalsOwn;
+    teamStatCopy.goalsOwn += Number(match[dict.against]);
+    teamStatCopy.goalsFavor += Number(match[dict.goals]);
+    teamStatCopy.goalsBalance = Number(teamStatCopy.goalsFavor - teamStatCopy.goalsOwn);
     teamStatCopy[resultIndex.result] += 1;
     teamStatCopy.totalPoints += resultIndex.points;
-    teamStatCopy.efficiency = `${LeaderboardService
-      ._calculateEfficiency(teamStatCopy.totalPoints, teamStatCopy.totalGames)}%`;
+    teamStatCopy.efficiency = LeaderboardService
+      ._calculateEfficiency(teamStatCopy.totalPoints, teamStatCopy.totalGames);
     return teamStatCopy;
   }
 

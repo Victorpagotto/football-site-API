@@ -29,8 +29,8 @@ export default class ValidationUpdateMatch extends Validator {
   // Condition, message, status.
   protected get checkConditions(): conditionCheck[] {
     return [
-      [!this._homeTeamGoals, BADREQUEST, 'badRequest'],
-      [!this._awayTeamGoals, BADREQUEST, 'badRequest'],
+      [!this._homeTeamGoals && this._homeTeamGoals !== 0, BADREQUEST, 'badRequest'],
+      [!this._awayTeamGoals && this._awayTeamGoals !== 0, BADREQUEST, 'badRequest'],
     ];
   }
 
