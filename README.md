@@ -1,13 +1,13 @@
-<h1 align="center">Virtual Smitht</h1>
+<h1 align="center">Football Site API</h1>
 
 <h2 align="center">Português</h2>
 
 
-**Nome**: Ferreiro Virtual
+**Nome**: API de Site de Futebol.
 
 **Conhecimentos Usados**: Typescript.
 
-**Ferramentas usadas**: Node.js, JWT, Express e MySQL.
+**Ferramentas usadas**: Node.js, JWT, Express, Sequelize, Docker e Bcrypt.
 
 **Número de Pessoas**: 1 (sozinho).
 
@@ -27,18 +27,18 @@
 -----------------------
 
 <h3 align="center">Como Instalar</h3>
-<p align="justify">Para realizar o uso desta API em seu computador, você precisará ter instalado o Node.js e o servidor de banco de dados MySQL, tendo-os funcionando corretamente. Preencha as variáveis de sistema no .env, retirando o .exemple, tornando-as assim ativas através da biblioteca dotenv pelo projeto. Antes de iniciar o projeto, instale as dependências com "npm install" e em seguida utilize o comando padrão "npm start". Há disponível, na pasta src/db, um arquivo para gerar um banco nos moldes do projeto.</p>
+<p align="justify">Para realizar o uso desta API em seu computador, você precisará ter instalado o Node.js, o Docker e Docker-compose, e o servidor de banco de dados MySQL, tendo-os funcionando corretamente. Preencha as variáveis de sistema no .env, retirando o .exemple, tornando-as assim ativas através da biblioteca dotenv pelo projeto. Antes de iniciar o projeto, instale as dependências com "npm install", certifique-se de ter as portas 3000 e 3001 abertas, e em seguida utilize o comando "npm run compose:up" para iniciar, bem como o comando "npm run compose:down" para finalizar.</p>
 
 -----------------------
 
 <h2 align="center">English</h2>
 
 
-**Name**: Virtual Smith
+**Name**: Football Site API
 
 **Used Knowledges**: Typescript.
 
-**Used Tools**: Node.js, JWT, Express and MySQ.
+**Used Tools**: Node.js, JWT, Express, Sequelize, Docker and Bcrypt.
 
 **Number of People**: 1 (solo).
 
@@ -58,6 +58,7 @@
 -----------------------
 
 <h3 align="center">How to Install</h3>
-<p align="justify">For the project to properly work, it's necessary to have installed Node.js and Git. After that, just clone the repository and run the command "npm install" within the project's folder. To start the project, have port 3000 open on your computer's localhost, then run the command "npm start", also within the project's folder, for the page to be open in your browser. There is available, in the src/db folder, a file to generate a database in the project's molds.</p>
+<p align="justify">For you to use this API on your computer, you'll need to have Node.js, Docker and Docker-compose, and the MySQL database server installed and working properly. Fill in your info in the system variables in the .env and then remove the .example, thus making it active through the dotenv library in the project. Before starting it, install the dependencies with "npm install", then make sure you have 3000 and 3001 ports open; use the command "npm run compose:up" to start, as well as the command "npm run compose:down" to finish.
+</p>
 
 -----------------------
